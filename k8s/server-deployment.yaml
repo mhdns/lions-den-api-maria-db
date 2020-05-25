@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: server
+  template:
+    metadata:
+      labels:
+        component: server
+    spec:
+      containers:
+        - name: server
+          image: mhdns/lions-den-api
+          ports:
+            - containerPort: 5000
+          env:
+            - name: NODE_ENV
+              value: development
+            - name: PORT
+              value: '5000'
+            - name: MONGO_URI
+              valueFrom:
+                secretKeyRef:
+                  name: lions-den-api-dev
+                  key: mongoUri
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: lions-den-api-dev
+                  key: jwtSecret
+            - name: JWT_EXPIRE
+              value: '2 days'
+            - name: JWT_COOKIE_EXPIRE
+              value: '2'
+

@@ -1,0 +1,15 @@
+apiVersion: skaffold/v2beta3
+kind: Config
+metadata:
+  name: server
+build:
+  artifacts:
+  - image: mhdns/lions-den-api
+    docker:
+      dockerfile: Dockerfile.dev
+deploy:
+  kubectl:
+    manifests:
+    - k8s/ingress-service.yaml
+    - k8s/server-cluster-ip-service.yaml
+    - k8s/server-deployment.yaml
