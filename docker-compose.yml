@@ -1,5 +1,12 @@
 version: '3'
 services: 
+  db:
+    image: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: Password123!
+    ports:
+      - '3306:3306'
   api:
     build:
       dockerfile: Dockerfile.dev
@@ -9,3 +16,7 @@ services:
       - '.:/app'
     ports:
       - '5000:5000'
+    depends_on: 
+      - db
+    links:
+      - db

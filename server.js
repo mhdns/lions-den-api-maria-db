@@ -37,7 +37,20 @@ if (process.env.NODE_ENV === 'test') {
 }
 
 // Connect to DB
+// const connectDbForever = () => {
+//   try {
+//     connectDB();
+//   } catch (err) {
+//     console.log(err);
+//     connectDbForever();
+//   }
+// };
+
 connectDB();
+
+connectDB();
+connectDB();
+
 
 // Create express app
 const app = express();

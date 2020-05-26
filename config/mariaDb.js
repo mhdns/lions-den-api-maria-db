@@ -13,6 +13,9 @@ async function asyncFunction() {
     conn = await pool.getConnection();
     const rows = await conn.query('SELECT 1 as val');
     console.log(rows); // [ {val: 1}, meta: ... ]
+
+    const row = await conn.query('SELECT 2 as val');
+    console.log(row); // [ {val: 1}, meta: ... ]
   } finally {
     if (conn) conn.end();
   }

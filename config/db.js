@@ -1,17 +1,29 @@
-const mongoose = require('mongoose');
-const chalk = require('chalk');
+const mariadb = require('mariadb');
+
+const pool = mariadb.createPool({
+  host: 'localhost',
+  user: 'root',
+  password: 'Password123!',
+  connectionLimit: 100
+});
 
 const connectDB = async () => {
-  const db = chalk.greenBright.underline.bold;
-  const conn = await mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useFindAndModify: false,
-    useUnifiedTopology: true
-  });
+  const conn = await mariadb.createConnection({
+    host: 'db',
+    user: 'root',
+    password: 'Password123!',
 
-  // eslint-disable-next-line no-console
-  console.log(db(`MongoDB Connected: ${conn.connection.host}`));
+  });
+  console.log(conn);
+  console.log('Connected to DB...');
+  const rows = await conn.query('SELECT 1 as val');
+  console.log(rows); // [ {val: 1}, meta: ... ]
+
+  const row = await conn.query('SELECT 2 as val');
+  console.log(row);
+
+  await conn.end();
+  console.log('connection closed');
 };
 
 module.exports = connectDB;
