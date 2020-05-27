@@ -1,4 +1,4 @@
-apiVersion: skaffold/v2beta3
+apiVersion: skaffold/v2beta4
 kind: Config
 metadata:
   name: server
@@ -11,5 +11,7 @@ deploy:
   kubectl:
     manifests:
     - k8s/ingress-service.yaml
+    - k8s/mariadb-cluster-ip-service.yaml
+    - k8s/mariadb-deployment.yaml
     - k8s/server-cluster-ip-service.yaml
     - k8s/server-deployment.yaml

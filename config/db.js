@@ -1,15 +1,8 @@
 const mariadb = require('mariadb');
 
-const pool = mariadb.createPool({
-  host: 'localhost',
-  user: 'root',
-  password: 'Password123!',
-  connectionLimit: 100
-});
-
 const connectDB = async () => {
   const conn = await mariadb.createConnection({
-    host: 'db',
+    host: 'mariadb-cluster-ip-service',
     user: 'root',
     password: 'Password123!',
 
