@@ -1,22 +1,54 @@
 const mariadb = require('mariadb');
 
-const connectDB = async () => {
-  const conn = await mariadb.createConnection({
+const genPool = (db = null) => {
+  let pool = mariadb.createPool({
     host: 'mariadb-cluster-ip-service',
     user: 'root',
     password: 'Password123!',
-
+    connectionLimit: 5
   });
-  console.log(conn);
-  console.log('Connected to DB...');
-  const rows = await conn.query('SELECT 1 as val');
-  console.log(rows); // [ {val: 1}, meta: ... ]
 
-  const row = await conn.query('SELECT 2 as val');
-  console.log(row);
+  if (db) {
+    pool = mariadb.createPool({
+      host: 'mariadb-cluster-ip-service',
+      user: 'root',
+      database: `${db}`,
+      password: 'Password123!',
+      connectionLimit: 100
+    });
+  }
+
+  return pool;
+};
+
+
+const connectDB = async (db = null) => {
+  const pool = genPool(db);
+  const conn = await pool.getConnection();
+  return conn;
+};
+
+const createDb = async (dbName) => {
+  const conn = connectDB();
+
+  await conn.query(`CREATE DATABASE IF NOT EXISTS ${dbName};`);
 
   await conn.end();
-  console.log('connection closed');
 };
+
+const createTable = async (db, tableName, fields) => {
+  const conn = connectDB(db);
+
+  let colType = '';
+  Object.keys(fields).forEach((key, index) => {
+    colType += `${key} ${index},\n`;
+  });
+  colType = colType.substr(0, colType.length - 2);
+
+  await conn.query(`CREATE TABLE IF NOT EXISTS ${tableName} (${colType});`);
+
+  await conn.end();
+};
+
 
 module.exports = connectDB;
